@@ -63,7 +63,7 @@ function FormulirPengambilan() {
         body: JSON.stringify(formData)
       });
 
-      showMessage('Data berhasil disimpan ke Google Sheets! 📊', 'success');
+      showMessage('Data berhasil disimpan ke Database! 📊', 'success');
       
       // Reset form setelah berhasil
       setFormData({
@@ -364,7 +364,7 @@ function FormulirPengambilan() {
                 Informasi Penting
               </h3>
               <p className="text-xs md:text-sm text-blue-800 leading-relaxed">
-                Data yang disimpan akan langsung masuk ke Google Sheets dan dapat dilihat secara real-time oleh admin. 
+                Data yang disimpan akan langsung masuk ke database dan dapat dilihat secara real-time oleh admin. 
                 Pastikan semua data sudah benar sebelum menyimpan.
               </p>
             </div>
@@ -412,8 +412,8 @@ function FormulirPengambilan() {
               <p className="text-xs text-gray-300">© Copyright By Pengadilan Agama Kalianda</p>
             </div>
             <div className="text-xs text-gray-300">
-              <div>© 2023. marjinal5454</div>
-              <div>Version 4.4.0 - Google Sheets Integration</div>
+              <div>© 2023</div>
+              <div>Version 4.4.0 - Application Integration</div>
             </div>
           </div>
         </div>
