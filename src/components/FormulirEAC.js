@@ -22,27 +22,18 @@ function FormulirEAC() {
     // Format NIK (hanya angka, max 16 digit)
     if (name === 'nik') {
       const numericValue = value.replace(/\D/g, '').slice(0, 16);
-      setFormData(prev => ({
-        ...prev,
-        [name]: numericValue
-      }));
+      setFormData(prev => ({ ...prev, [name]: numericValue }));
       return;
     }
 
     // Format No HP (hanya angka, max 15 digit)
     if (name === 'noHp') {
       const numericValue = value.replace(/\D/g, '').slice(0, 15);
-      setFormData(prev => ({
-        ...prev,
-        [name]: numericValue
-      }));
+      setFormData(prev => ({ ...prev, [name]: numericValue }));
       return;
     }
 
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const showMessage = (msg, type) => {
@@ -54,65 +45,26 @@ function FormulirEAC() {
     }, 5000);
   };
 
-  const validateEmail = (email) => {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
-  };
+  const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   const handleSubmit = async () => {
-    // Validasi
-    if (!formData.noPerkara.trim()) {
-      showMessage('No Perkara harus diisi', 'error');
-      return;
-    }
-
-    if (!formData.namaPihak.trim()) {
-      showMessage('Nama Pihak harus diisi', 'error');
-      return;
-    }
-
-    if (!formData.nik.trim() || formData.nik.length !== 16) {
-      showMessage('NIK harus diisi dengan 16 digit', 'error');
-      return;
-    }
-
-    if (!formData.email.trim()) {
-      showMessage('Email harus diisi', 'error');
-      return;
-    }
-
-    if (!validateEmail(formData.email)) {
-      showMessage('Format email tidak valid', 'error');
-      return;
-    }
-
-    if (!formData.noHp.trim() || formData.noHp.length < 10) {
-      showMessage('No HP harus diisi minimal 10 digit', 'error');
-      return;
-    }
+    if (!formData.noPerkara.trim()) return showMessage('No Perkara harus diisi', 'error');
+    if (!formData.namaPihak.trim()) return showMessage('Nama Pihak harus diisi', 'error');
+    if (!formData.nik.trim() || formData.nik.length !== 16) return showMessage('NIK harus 16 digit', 'error');
+    if (!formData.email.trim()) return showMessage('Email harus diisi', 'error');
+    if (!validateEmail(formData.email)) return showMessage('Format email tidak valid', 'error');
+    if (!formData.noHp.trim() || formData.noHp.length < 10) return showMessage('No HP minimal 10 digit', 'error');
 
     setLoading(true);
-
     try {
       await fetch(GOOGLE_SCRIPT_EAC_URL, {
         method: 'POST',
         mode: 'no-cors',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       });
-
       showMessage('Permohonan akun EAC berhasil disubmit! 🎉', 'success');
-
-      // Reset form
-      setFormData({
-        noPerkara: '',
-        namaPihak: '',
-        nik: '',
-        email: '',
-        noHp: ''
-      });
+      setFormData({ noPerkara: '', namaPihak: '', nik: '', email: '', noHp: '' });
     } catch (error) {
       console.error('Error:', error);
       showMessage('Terjadi error saat mengirim permohonan', 'error');
@@ -123,19 +75,14 @@ function FormulirEAC() {
 
   const handleReset = () => {
     if (window.confirm('Apakah Anda yakin ingin mengosongkan form?')) {
-      setFormData({
-        noPerkara: '',
-        namaPihak: '',
-        nik: '',
-        email: '',
-        noHp: ''
-      });
+      setFormData({ noPerkara: '', namaPihak: '', nik: '', email: '', noHp: '' });
       setMessage('');
     }
   };
 
   return (
-    <div className="h-screen overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-100 font-sans flex flex-col">
+    <div className="bg-gradient-to-br from-blue-50 to-indigo-100 font-sans flex flex-col overflow-hidden"
+         style={{ height: '100dvh' /* dynamic viewport fix mobile */ }}>
       {/* Header */}
       <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-4 md:py-6 px-4 md:px-5 shadow-lg">
         <div className="max-w-4xl mx-auto text-center">
@@ -148,17 +95,25 @@ function FormulirEAC() {
         </div>
       </div>
 
-      {/* Alert Message */}
+      {/* Alert */}
       {message && (
         <div className="mx-auto max-w-4xl mt-4 md:mt-6 px-4 md:px-5">
-          <div className={`p-4 rounded-lg text-sm md:text-base font-medium ${messageType === 'success' ? 'bg-green-100 text-green-800 border border-green-200' : 'bg-red-100 text-red-800 border border-red-200'}`}>
+          <div className={`p-4 rounded-lg text-sm md:text-base font-medium ${messageType === 'success'
+              ? 'bg-green-100 text-green-800 border border-green-200'
+              : 'bg-red-100 text-red-800 border border-red-200'}`}>
             {message}
           </div>
         </div>
       )}
 
-      {/* Main Content */}
-      <div className="max-w-4xl mx-auto px-4 md:px-5 py-6 md:py-10 flex-1 overflow-hidden min-h-0 pb-28">
+      {/* Main Content (scrollable area) */}
+      <div
+        className="max-w-4xl mx-auto px-4 md:px-5 py-6 md:py-10 flex-1 overflow-y-auto min-h-0 touch-pan-y"
+        style={{
+          WebkitOverflowScrolling: 'touch',
+          paddingBottom: 'calc(env(safe-area-inset-bottom) + 10rem)' // ruang ekstra agar tombol tidak ketutup footer
+        }}
+      >
         {/* Info Card */}
         <div className="bg-white rounded-xl shadow-lg border border-gray-200 mb-8">
           <div className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white p-4 md:p-6 rounded-t-xl">
@@ -233,9 +188,8 @@ function FormulirEAC() {
                 </div>
               </div>
 
-              {/* Row untuk Email dan No HP */}
+              {/* Email & No HP */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Email */}
                 <div>
                   <label className="block text-sm md:text-base font-semibold text-gray-700 mb-2">
                     Email <span className="text-red-500">*</span>
@@ -251,7 +205,6 @@ function FormulirEAC() {
                   />
                 </div>
 
-                {/* No HP */}
                 <div>
                   <label className="block text-sm md:text-base font-semibold text-gray-700 mb-2">
                     No HP <span className="text-red-500">*</span>
@@ -287,9 +240,7 @@ function FormulirEAC() {
               </svg>
             </div>
             <div>
-              <h3 className="font-semibold text-amber-800 text-sm md:text-base mb-2">
-                Penting untuk Diperhatikan:
-              </h3>
+              <h3 className="font-semibold text-amber-800 text-sm md:text-base mb-2">Penting untuk Diperhatikan:</h3>
               <ul className="text-xs md:text-sm text-amber-700 space-y-1">
                 <li>• Pastikan data yang diisi sudah benar dan sesuai dengan dokumen resmi</li>
                 <li>• Email dan No HP akan digunakan untuk komunikasi lebih lanjut</li>
@@ -329,8 +280,9 @@ function FormulirEAC() {
         </div>
       </div>
 
-      {/* Footer */}
-      {/* <div className="bg-gray-900 text-white py-6 px-4 md:px-5 fixed bottom-0 left-0 right-0 z-20">
+      {/* Footer (fixed + safe-area) */}
+      <div className="bg-gray-900 text-white py-6 px-4 md:px-5 fixed bottom-0 left-0 right-0 z-20"
+           style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
         <div className="max-w-4xl mx-auto">
           <div className="text-center">
             <p className="text-sm md:text-base font-semibold mb-2">
@@ -341,7 +293,7 @@ function FormulirEAC() {
             </p>
           </div>
         </div>
-      </div> */}
+      </div>
     </div>
   );
 }
