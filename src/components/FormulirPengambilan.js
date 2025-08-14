@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 // Ganti dengan URL Apps Script kamu untuk form pengambilan
 const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwOP4CIfmdSkS6Dx9hAelKxQnu9B1t2ZOaLz1Aq3gsAw7s-n2WVAITJyCO10WfM4RuE/exec';
@@ -21,26 +21,6 @@ function FormulirPengambilan() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
-
-  // Kunci scroll halaman saat komponen aktif
-  useEffect(() => {
-    const prevHtmlOverflow = document.documentElement.style.overflow;
-    const prevBodyOverflow = document.body.style.overflow;
-    const prevHtmlHeight = document.documentElement.style.height;
-    const prevBodyHeight = document.body.style.height;
-
-    document.documentElement.style.overflow = 'hidden';
-    document.body.style.overflow = 'hidden';
-    document.documentElement.style.height = '100%';
-    document.body.style.height = '100%';
-
-    return () => {
-      document.documentElement.style.overflow = prevHtmlOverflow;
-      document.body.style.overflow = prevBodyOverflow;
-      document.documentElement.style.height = prevHtmlHeight;
-      document.body.style.height = prevBodyHeight;
-    };
-  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
