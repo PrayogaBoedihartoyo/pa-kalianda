@@ -108,7 +108,10 @@ function FormulirPengambilan() {
   };
 
   return (
-    <div className="h-screen overflow-hidden bg-gray-100 font-sans flex flex-col">
+    <div
+      className="bg-gray-100 font-sans flex flex-col overflow-hidden"
+      style={{ height: '100dvh' }}  // dynamic viewport untuk mobile
+    >
       {/* Header */}
       <div className="bg-green-500 text-white py-3 md:py-4 px-4 md:px-5 text-center">
         <h1 className="text-base md:text-lg lg:text-xl font-bold leading-tight">
@@ -126,15 +129,19 @@ function FormulirPengambilan() {
         </div>
       )}
 
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 md:px-5 py-4 md:py-6 bg-white flex-1 overflow-hidden min-h-0 pb-28">
-        
+      {/* Main Content: scrollable area */}
+      <div
+        className="max-w-7xl mx-auto px-4 md:px-5 py-4 md:py-6 bg-white flex-1 overflow-y-auto min-h-0"
+        style={{
+          WebkitOverflowScrolling: 'touch',
+          paddingBottom: 'calc(env(safe-area-inset-bottom) + 11rem)' // ruang ekstra biar tombol tidak ketutup footer
+        }}
+      >
         {/* Form Container */}
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 lg:gap-10 mb-6 md:mb-8">
           
           {/* Left Column */}
           <div className="space-y-4 md:space-y-5">
-            
             {/* Nomor Perkara */}
             <div>
               <label className="block mb-1 md:mb-2 font-medium text-sm md:text-base text-gray-700">
@@ -394,7 +401,10 @@ function FormulirPengambilan() {
       </div>
 
       {/* Footer (fixed) */}
-      <div className="bg-gray-900 text-white py-4 md:py-6 px-4 md:px-5 bottom-0 left-0 right-0 z-20">
+      <div
+        className="bg-gray-900 text-white py-4 md:py-6 px-4 md:px-5 fixed bottom-0 left-0 right-0 z-20"
+        style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+      >
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-center text-center md:text-left">
             <div className="mb-3 md:mb-0">
