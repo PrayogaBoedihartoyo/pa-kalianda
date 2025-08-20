@@ -67,9 +67,9 @@ function FormulirPengambilan() {
       showMessage('Data berhasil disimpan ke Database! 📊', 'success');
       
       // Kirim pesan WhatsApp ke nomor yang diinputkan
-      const whatsappMessage = `Permohonan pengambilan produk putusan telah berhasil diajukan. Nomor Perkara: ${formData.nomorPerkara}, Nama Pihak: ${formData.namaPihak}`;
-      const whatsappUrl = `https://wa.me/${formData.noHp}?text=${encodeURIComponent(whatsappMessage)}`;
-      window.open(whatsappUrl, '_blank');  // Membuka WhatsApp
+      // const whatsappMessage = `Permohonan pengambilan produk putusan telah berhasil diajukan. Nomor Perkara: ${formData.nomorPerkara}, Nama Pihak: ${formData.namaPihak}`;
+      // const whatsappUrl = `https://wa.me/${formData.noHp}?text=${encodeURIComponent(whatsappMessage)}`;
+      // window.open(whatsappUrl, '_blank');  // Membuka WhatsApp
 
       // Reset form setelah berhasil
       setFormData({
