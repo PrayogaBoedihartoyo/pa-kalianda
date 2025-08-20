@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 // Ganti dengan URL Apps Script kamu untuk form pengambilan
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwOP4CIfmdSkS6Dx9hAelKxQnu9B1t2ZOaLz1Aq3gsAw7s-n2WVAITJyCO10WfM4RuE/exec';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbynSFafQEZ9IR4fXVmfBuUCdd1tbLyT6wn_GMRPhq8gxu1abuMc_H3v9ay_paAn3Gim/exec';
 
 function FormulirPengambilan() {
   const [formData, setFormData] = useState({
@@ -15,7 +15,8 @@ function FormulirPengambilan() {
     waktuPengambilan: '',
     namaKuasa: '',
     alamatKuasa: '',
-    hubunganKuasa: ''
+    hubunganKuasa: '',
+    noHp: ''  // Menambahkan field noHp
   });
 
   const [loading, setLoading] = useState(false);
@@ -41,7 +42,7 @@ function FormulirPengambilan() {
 
   const handleSimpan = async () => {
     // Validasi basic
-    if (!formData.nomorPerkara || !formData.namaPihak || !formData.nikKtp || !formData.alamat) {
+    if (!formData.nomorPerkara || !formData.namaPihak || !formData.nikKtp || !formData.alamat || !formData.noHp) {
       showMessage('Mohon isi semua field yang wajib', 'error');
       return;
     }
@@ -65,6 +66,11 @@ function FormulirPengambilan() {
 
       showMessage('Data berhasil disimpan ke Database! 📊', 'success');
       
+      // Kirim pesan WhatsApp ke nomor yang diinputkan
+      const whatsappMessage = `Permohonan pengambilan produk putusan telah berhasil diajukan. Nomor Perkara: ${formData.nomorPerkara}, Nama Pihak: ${formData.namaPihak}`;
+      const whatsappUrl = `https://wa.me/${formData.noHp}?text=${encodeURIComponent(whatsappMessage)}`;
+      window.open(whatsappUrl, '_blank');  // Membuka WhatsApp
+
       // Reset form setelah berhasil
       setFormData({
         nomorPerkara: '',
@@ -77,7 +83,8 @@ function FormulirPengambilan() {
         waktuPengambilan: '',
         namaKuasa: '',
         alamatKuasa: '',
-        hubunganKuasa: ''
+        hubunganKuasa: '',
+        noHp: ''  // Reset nomor HP
       });
 
     } catch (error) {
@@ -101,7 +108,8 @@ function FormulirPengambilan() {
         waktuPengambilan: '',
         namaKuasa: '',
         alamatKuasa: '',
-        hubunganKuasa: ''
+        hubunganKuasa: '',
+        noHp: ''  // Reset nomor HP
       });
       setMessage('');
     }
@@ -190,6 +198,23 @@ function FormulirPengambilan() {
               />
             </div>
 
+            {/* Nomor HP - Kolom Baru */}
+            <div>
+              <label className="block mb-1 md:mb-2 font-medium text-sm md:text-base text-gray-700">
+                Nomor HP <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                name="noHp"
+                value={formData.noHp}
+                onChange={handleInputChange}
+                maxLength="15"
+                placeholder="Contoh: 628xxxxxxxxxx"
+                className="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded focus:border-green-500 focus:ring-2 focus:ring-green-200 focus:outline-none transition-all text-sm md:text-base"
+                required
+              />
+            </div>
+
             {/* Alamat */}
             <div>
               <label className="block mb-1 md:mb-2 font-medium text-sm md:text-base text-gray-700">
@@ -236,8 +261,10 @@ function FormulirPengambilan() {
                   required
                 >
                   <option value="">-- Pilih Tempat Pengambilan --</option>
-                  <option value="Kantor PA Kalianda">Kantor PA Kalianda</option>
-                  <option value="Kantor Cabang Lampung Selatan">Kantor Cabang Lampung Selatan</option>
+                  <option value="Kantor Pengambilan Agama Kalianda">Kantor Pengambilan Agama Kalianda</option>
+                  <option value="Kantor Desa Karang Sari Kecamatan Jati Agung">Kantor Desa Karang Sari Kecamatan Jati Agung</option>
+                  <option value="Kantor Desa Jati Baru Kecamatan Tanjung Bintang">Kantor Desa Jati Baru Kecamatan Tanjung Bintang</option>
+                  <option value="Kantor Desa Titiwangi Kecamatan Candipuro">Kantor Desa Titi Wangi Kecamatan Candipuro</option>
                   <option value="Lainnya">Lainnya</option>
                 </select>
               </div>

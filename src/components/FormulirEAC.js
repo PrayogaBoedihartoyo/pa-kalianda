@@ -81,15 +81,15 @@ function FormulirEAC() {
   };
 
   return (
-    <div className="bg-gradient-to-br from-blue-50 to-indigo-100 font-sans flex flex-col overflow-hidden"
+    <div className="bg-gradient-to-br from-green-50 to-indigo-100 font-sans flex flex-col overflow-hidden"
          style={{ height: '100dvh' /* dynamic viewport fix mobile */ }}>
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-4 md:py-6 px-4 md:px-5 shadow-lg">
+      <div className="bg-gradient-to-r from-green-600 to-green-700 text-white py-4 md:py-6 px-4 md:px-5 shadow-lg">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-xl md:text-2xl lg:text-3xl font-bold mb-2">
             Permohonan Pengajuan Akun EAC
           </h1>
-          <p className="text-blue-100 text-sm md:text-base">
+          <p className="text-green-100 text-sm md:text-base">
             Electronic Authentication Certificate - Pengadilan Agama Kalianda
           </p>
         </div>
@@ -116,7 +116,7 @@ function FormulirEAC() {
       >
         {/* Info Card */}
         <div className="bg-white rounded-xl shadow-lg border border-gray-200 mb-8">
-          <div className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white p-4 md:p-6 rounded-t-xl">
+          <div className="bg-gradient-to-r from-green-500 to-green-600 text-white p-4 md:p-6 rounded-t-xl">
             <div className="flex items-center">
               <div className="bg-white bg-opacity-20 p-3 rounded-lg mr-4">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -125,7 +125,7 @@ function FormulirEAC() {
               </div>
               <div>
                 <h2 className="text-lg md:text-xl font-bold">Form Permohonan Akun EAC</h2>
-                <p className="text-blue-100 text-sm">Lengkapi data di bawah dengan benar</p>
+                <p className="text-green-100 text-sm">Lengkapi data di bawah dengan benar</p>
               </div>
             </div>
           </div>
@@ -143,7 +143,7 @@ function FormulirEAC() {
                   value={formData.noPerkara}
                   onChange={handleInputChange}
                   placeholder="Contoh: 001/Pdt.G/2025/PA.Kla"
-                  className="w-full px-4 py-3 md:py-4 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none transition-all text-sm md:text-base"
+                  className="w-full px-4 py-3 md:py-4 border-2 border-gray-300 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 focus:outline-none transition-all text-sm md:text-base"
                   required
                 />
                 <p className="text-xs text-gray-500 mt-1">Masukkan nomor perkara yang valid</p>
@@ -160,7 +160,7 @@ function FormulirEAC() {
                   value={formData.namaPihak}
                   onChange={handleInputChange}
                   placeholder="Nama lengkap sesuai KTP"
-                  className="w-full px-4 py-3 md:py-4 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none transition-all text-sm md:text-base"
+                  className="w-full px-4 py-3 md:py-4 border-2 border-gray-300 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 focus:outline-none transition-all text-sm md:text-base"
                   required
                 />
               </div>
@@ -177,7 +177,7 @@ function FormulirEAC() {
                   onChange={handleInputChange}
                   placeholder="16 digit NIK"
                   maxLength="16"
-                  className="w-full px-4 py-3 md:py-4 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none transition-all text-sm md:text-base"
+                  className="w-full px-4 py-3 md:py-4 border-2 border-gray-300 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 focus:outline-none transition-all text-sm md:text-base"
                   required
                 />
                 <div className="flex justify-between items-center mt-1">
@@ -200,7 +200,7 @@ function FormulirEAC() {
                     value={formData.email}
                     onChange={handleInputChange}
                     placeholder="contoh@email.com"
-                    className="w-full px-4 py-3 md:py-4 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none transition-all text-sm md:text-base"
+                    className="w-full px-4 py-3 md:py-4 border-2 border-gray-300 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 focus:outline-none transition-all text-sm md:text-base"
                     required
                   />
                 </div>
@@ -216,7 +216,7 @@ function FormulirEAC() {
                     onChange={handleInputChange}
                     placeholder="08xxxxxxxxxx"
                     maxLength="15"
-                    className="w-full px-4 py-3 md:py-4 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none transition-all text-sm md:text-base"
+                    className="w-full px-4 py-3 md:py-4 border-2 border-gray-300 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 focus:outline-none transition-all text-sm md:text-base"
                     required
                   />
                   <div className="flex justify-between items-center mt-1">
@@ -244,7 +244,7 @@ function FormulirEAC() {
               <ul className="text-xs md:text-sm text-amber-700 space-y-1">
                 <li>• Pastikan data yang diisi sudah benar dan sesuai dengan dokumen resmi</li>
                 <li>• Email dan No HP akan digunakan untuk komunikasi lebih lanjut</li>
-                <li>• Proses persetujuan akun EAC membutuhkan waktu 1-3 hari kerja</li>
+                <li>• Proses persetujuan akun EAC membutuhkan waktu 1x24 jam kerja</li>
                 <li>• Anda akan mendapat notifikasi melalui email setelah akun disetujui</li>
               </ul>
             </div>
@@ -263,7 +263,7 @@ function FormulirEAC() {
           <button
             onClick={handleSubmit}
             disabled={loading}
-            className={`w-full sm:w-auto ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700'} text-white font-bold py-3 md:py-4 px-8 md:px-12 rounded-lg transition-all shadow-lg text-sm md:text-base`}
+            className={`w-full sm:w-auto ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800'} text-white font-bold py-3 md:py-4 px-8 md:px-12 rounded-lg transition-all shadow-lg text-sm md:text-base`}
           >
             {loading ? (
               <span className="flex items-center justify-center">

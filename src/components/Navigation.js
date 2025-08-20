@@ -71,7 +71,7 @@ export default function Navigation() {
                       src={m.img}
                       alt={m.caption}
                       loading="lazy"
-                      className="w-[86%] h-[86%] object-contain rounded-full block"
+                      className="w-[85%] h-[85%] object-contain rounded-full block"
                       onError={(e) => (e.currentTarget.style.display = "none")}
                     />
                   ) : (
