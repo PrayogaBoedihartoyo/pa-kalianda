@@ -650,12 +650,6 @@ export default function FormulirPengambilan() {
                         >
                           📷 Ambil Selfie
                         </button>
-                        <button
-                          onClick={() => onPickFile("fotoVerifikasi")}
-                          className="w-full bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 px-4 rounded-lg transition-all"
-                        >
-                          📎 Unggah File
-                        </button>
                       </div>
                     )}
                   </div>
@@ -693,12 +687,6 @@ export default function FormulirPengambilan() {
                       </div>
                     ) : (
                       <div className="grid grid-cols-2 gap-2">
-                        <button
-                          onClick={() => startCamera("fotoKtp")}
-                          className="w-full bg-gray-500 hover:bg-gray-600 text-white font-semibold py-3 px-4 rounded-lg transition-all flex items-center justify-center gap-2"
-                        >
-                          📄 Ambil Foto KTP
-                        </button>
                         <button
                           onClick={() => onPickFile("fotoKtp")}
                           className="w-full bg-gray-700 hover:bg-gray-800 text-white font-semibold py-3 px-4 rounded-lg transition-all"
