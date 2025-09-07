@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 
 // ===== Ganti dengan URL Apps Script kamu =====
 const GOOGLE_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbynSFafQEZ9IR4fXVmfBuUCdd1tbLyT6wn_GMRPhq8gxu1abuMc_H3v9ay_paAn3Gim/exec";
+  "https://script.google.com/macros/s/AKfycbzLIpxY5vwEn_5Fw4kjxFn4dW3VXcUNI6DBa4B5fPkikvEXsgPumSPTZxswZZY1gyXb/exec";
 
 export default function FormulirPengambilan() {
   const [formData, setFormData] = useState({
@@ -36,13 +36,14 @@ export default function FormulirPengambilan() {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const fileInputRef = useRef(null);
+  const watchdogRef = useRef(null);
 
   // ============== Helpers ==============
   const showMessage = (msg, type = "success") => {
     setMessage(msg);
     setMessageType(type);
-    window.clearTimeout((showMessage)._t);
-    (showMessage)._t = window.setTimeout(() => {
+    window.clearTimeout(showMessage._t);
+    showMessage._t = window.setTimeout(() => {
       setMessage("");
       setMessageType("");
     }, 5000);
@@ -60,43 +61,92 @@ export default function FormulirPengambilan() {
   }, []);
 
   // ============== Kamera Logic ==============
-  const hasBackCamera = () => {
-    // iOS Safari terkadang mengabaikan 'environment' di insecure context
-    return true; // kita coba dulu, kalau gagal kita fallback ke front
-  };
-
   const startCamera = async (photoType) => {
+    if (!navigator.mediaDevices?.getUserMedia) {
+      showMessage("Browser tidak mendukung getUserMedia.", "error");
+      return;
+    }
+
     try {
       setCurrentPhotoType(photoType);
       setIsVideoReady(false);
-
-      // Selfie pakai front, KTP pakai back (environment) jika ada
-      const preferBack = photoType === "fotoKtp" && hasBackCamera();
-      const constraints = {
-        video: {
-          facingMode: preferBack ? { ideal: "environment" } : { ideal: "user" },
-          width: { ideal: 1280 },
-          height: { ideal: 720 },
-        },
-        audio: false,
-      };
-
-      const stream = await navigator.mediaDevices.getUserMedia(constraints);
-      setUsingBackCamera(preferBack);
-      setCameraStream(stream);
       setShowCamera(true);
 
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        // beberapa browser butuh play() manual
-        await videoRef.current.play().catch(() => {});
+      const preferBack = photoType === "fotoKtp"; // KTP = belakang, Selfie = depan
+      const base = {
+        width: { ideal: 1280 },
+        height: { ideal: 720 },
+        facingMode: preferBack ? { ideal: "environment" } : { ideal: "user" },
+      };
+
+      let stream;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: base,
+          audio: false,
+        });
+        setUsingBackCamera(preferBack);
+      } catch (err) {
+        // Fallback ke kamera depan bila environment ditolak/tidak ada (umum di HTTP/iOS)
+        if (preferBack) {
+          stream = await navigator.mediaDevices.getUserMedia({
+            video: { ...base, facingMode: { ideal: "user" } },
+            audio: false,
+          });
+          setUsingBackCamera(false);
+        } else {
+          throw err;
+        }
+      }
+
+      setCameraStream(stream);
+
+      const v = videoRef.current;
+      if (v) {
+        v.srcObject = stream;
+        // Autoplay compliance (iOS): perlu muted + playsInline + user gesture
+        v.muted = true;
+        v.playsInline = true;
+
+        try {
+          await v.play();
+        } catch (_) {
+          // sebagian browser butuh sedikit delay
+          setTimeout(() => v.play().catch(() => {}), 50);
+        }
+
+        // Tandai siap ketika ada salah satu event
+        const markReady = () => setIsVideoReady(true);
+        v.onloadedmetadata = markReady;
+        v.oncanplay = markReady;
+        v.onplaying = markReady;
+
+        // Watchdog: jika event tidak muncul, polling dimensi video
+        let tries = 0;
+        const tick = () => {
+          if (!videoRef.current) return;
+          if (videoRef.current.videoWidth > 0 && videoRef.current.videoHeight > 0) {
+            setIsVideoReady(true);
+            watchdogRef.current && clearInterval(watchdogRef.current);
+            watchdogRef.current = null;
+          } else if (tries++ > 40) {
+            watchdogRef.current && clearInterval(watchdogRef.current);
+            watchdogRef.current = null;
+            showMessage(
+              "Gagal mengaktifkan kamera. Pastikan izin sudah diberikan & gunakan HTTPS (wajib di iOS).",
+              "error"
+            );
+          }
+        };
+        watchdogRef.current = setInterval(tick, 200);
       }
     } catch (error) {
       console.error("Error accessing camera:", error);
       showMessage(
-        "Tidak dapat mengakses kamera. Pastikan izin sudah diberikan & halaman menggunakan HTTPS.",
+        "Tidak dapat mengakses kamera. Cek izin di browser & gunakan HTTPS.",
         "error"
       );
+      setShowCamera(false);
     }
   };
 
@@ -106,23 +156,21 @@ export default function FormulirPengambilan() {
         cameraStream.getTracks().forEach((t) => t.stop());
       }
     } catch (_) {}
+    watchdogRef.current && clearInterval(watchdogRef.current);
+    watchdogRef.current = null;
     setCameraStream(null);
     setShowCamera(false);
     setIsVideoReady(false);
     setCurrentPhotoType("");
   };
 
-  const onVideoReady = () => {
-    // Dipanggil oleh onLoadedMetadata/onCanPlay
-    setIsVideoReady(true);
-  };
+  const onVideoReady = () => setIsVideoReady(true);
 
   // Utility: resize + compress supaya ukuran tidak terlalu besar
   const drawToCanvas = (video, canvas, maxW = 1280, maxH = 1280) => {
     const vw = video.videoWidth || 640;
     const vh = video.videoHeight || 480;
 
-    // pertahankan aspect ratio, batas maksimum dimensi
     let tw = vw;
     let th = vh;
     if (vw > maxW || vh > maxH) {
@@ -135,8 +183,7 @@ export default function FormulirPengambilan() {
     canvas.height = th;
     const ctx = canvas.getContext("2d");
 
-    // Untuk selfie (front camera), banyak device sudah mirror di UI,
-    // tapi frame yang di-draw ke canvas tidak mirror. Kita mirror manual agar sesuai pratinjau.
+    // Mirror untuk selfie agar sesuai pratinjau
     const isSelfie = currentPhotoType === "fotoVerifikasi" && !usingBackCamera;
     if (isSelfie) {
       ctx.save();
@@ -169,7 +216,7 @@ export default function FormulirPengambilan() {
           }
           const sizeKB = Math.round(blob.size / 1024);
           if (sizeKB > 2000) {
-            // > 2 MB – kecilkan kualitas lagi sekali
+            // > 2 MB – kompres sekali lagi via dataURL
             const tmpUrl = canvas.toDataURL("image/jpeg", 0.8);
             setFormData((prev) => ({
               ...prev,
@@ -227,12 +274,10 @@ export default function FormulirPengambilan() {
       showMessage("File harus berupa gambar", "error");
       return;
     }
-    // Baca ke dataURL & optional resize via offscreen canvas untuk jaga ukuran
     const img = new Image();
     img.onload = () => {
       const canvas = canvasRef.current;
       const ctx = canvas.getContext("2d");
-      // resize jika terlalu besar
       const maxW = 1600;
       const maxH = 1600;
       let w = img.width;
@@ -265,9 +310,7 @@ export default function FormulirPengambilan() {
       e.target.value = "";
     };
     const fr = new FileReader();
-    fr.onload = (ev) => {
-      img.src = ev.target?.result;
-    };
+    fr.onload = (ev) => (img.src = ev.target?.result);
     fr.readAsDataURL(file);
   };
 
@@ -299,10 +342,7 @@ export default function FormulirPengambilan() {
 
     setLoading(true);
     try {
-      const dataToSend = {
-        ...formData,
-        timestamp: new Date().toISOString(),
-      };
+      const dataToSend = { ...formData, timestamp: new Date().toISOString() };
 
       await fetch(GOOGLE_SCRIPT_URL, {
         method: "POST",
@@ -337,11 +377,7 @@ export default function FormulirPengambilan() {
   };
 
   const handleKembali = () => {
-    if (
-      window.confirm(
-        "Apakah Anda yakin ingin kembali? Data yang belum disimpan akan hilang."
-      )
-    ) {
+    if (window.confirm("Apakah Anda yakin ingin kembali? Data yang belum disimpan akan hilang.")) {
       stopCamera();
       setFormData({
         nomorPerkara: "",
@@ -373,10 +409,7 @@ export default function FormulirPengambilan() {
 
   // ============== UI ==============
   return (
-    <div
-      className="bg-gray-100 font-sans flex flex-col overflow-hidden"
-      style={{ height: "100dvh" }}
-    >
+    <div className="bg-gray-100 font-sans flex flex-col overflow-hidden" style={{ height: "100dvh" }}>
       {/* Header */}
       <div className="bg-green-500 text-white py-3 md:py-4 px-4 md:px-5 text-center">
         <h1 className="text-base md:text-lg lg:text-xl font-bold leading-tight">
@@ -420,8 +453,10 @@ export default function FormulirPengambilan() {
                 ref={videoRef}
                 autoPlay
                 playsInline
+                muted
                 onLoadedMetadata={onVideoReady}
                 onCanPlay={onVideoReady}
+                onPlaying={onVideoReady}
                 className="w-full h-64 object-cover rounded-lg border-2 border-gray-300 bg-black"
               />
               {/* Overlay guide */}
@@ -452,7 +487,7 @@ export default function FormulirPengambilan() {
             </div>
 
             <p className="text-[11px] text-gray-500 mt-3 text-center">
-              Tip: Gunakan lingkungan terang, bersihkan lensa. Pada iPhone/iOS gunakan HTTPS agar kamera belakang dapat diakses.
+              Tip: gunakan HTTPS (terutama iPhone/iOS) & pastikan izin kamera di browser aktif.
             </p>
           </div>
         </div>
@@ -899,4 +934,4 @@ export default function FormulirPengambilan() {
       </div>
     </div>
   );
-};
+}
