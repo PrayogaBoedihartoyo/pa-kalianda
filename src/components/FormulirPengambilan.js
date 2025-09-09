@@ -910,7 +910,7 @@ export default function FormulirPengambilan() {
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-center text-center md:text-left">
             <div className="mb-3 md:mb-0">
-              <p className="text-sm md:text-base font-semibold">KING LAMBAN DILAN</p>
+              <p className="text-sm md:text-base font-semibold">SI-DINA</p>
               <p className="text-xs text-gray-300">© Copyright By Pengadilan Agama Kalianda</p>
             </div>
             <div className="text-xs text-gray-300">

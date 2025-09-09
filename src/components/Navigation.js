@@ -7,7 +7,7 @@ export default function Navigation() {
       key: "salinan",
       to: "/pengambilan",
       header1: "Permohonan Pengambilan",
-      header2: "Produk Penetapan/Putusan",
+      header2: "Akta-Cerai",
       caption: "FORMULIR PENGAMBILAN",
       img: "/assets/pengambilan.png",
       emoji: "📄",
@@ -32,7 +32,7 @@ export default function Navigation() {
           role="banner"
         >
           <div className="font-bold text-base sm:text-lg">
-            Selamat Datang Di Aplikasi King Lamban Dilan
+            Selamat Datang Di Aplikasi SI-DINA
           </div>
         </section>
 
@@ -90,7 +90,7 @@ export default function Navigation() {
         {/* Footer */}
         <footer className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-2 sm:gap-3 p-3 text-slate-500 border-t border-slate-200 bg-white rounded">
           <div>
-            KING LAMBAN DILAN © Copyright By Pengadilan Agama Kalianda
+            SI-DINA © Copyright By Pengadilan Agama Kalianda
             <div className="text-[11px] mt-1 text-slate-400">© 2023. marjinal5454</div>
           </div>
           <div className="text-[12px]">Version 4.4.0</div>
