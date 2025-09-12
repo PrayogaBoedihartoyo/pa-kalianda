@@ -600,7 +600,7 @@ function FormulirEAC() {
                   {/* Foto KTP (Opsional) */}
                   <div>
                     <label className="block mb-2 font-semibold text-sm md:text-base text-gray-700">
-                      Foto KTP (Opsional)
+                      Foto KTP
                     </label>
                     <div className="flex flex-col gap-3">
                       {formData.fotoKtp ? (

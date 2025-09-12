@@ -26,14 +26,13 @@ export default function Navigation() {
   return (
     <main className="min-h-screen bg-slate-50">
       <div className="max-w-[1100px] mx-auto my-4 px-3 sm:px-4">
-        {/* Header hijau */}
-        <section
-          className="bg-green-600 text-white border border-green-700 rounded-md px-5 py-4 shadow-inner"
-          role="banner"
-        >
-          <div className="font-bold text-base sm:text-lg">
-            Selamat Datang Di Aplikasi SI-DINA
-          </div>
+        <section className="text-center mb-1">
+          <img
+            src="/assets/DESAIN VISUAL SI DINA_page-0001.jpg"
+            alt="Logo Pengadilan Agama Kalianda"
+            className="mx-auto h-30 sm:h-50 mb-1"
+            loading="lazy"
+          />
         </section>
 
         {/* Subheader */}

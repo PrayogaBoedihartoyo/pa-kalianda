@@ -413,7 +413,7 @@ export default function FormulirPengambilan() {
       {/* Header */}
       <div className="bg-green-500 text-white py-3 md:py-4 px-4 md:px-5 text-center">
         <h1 className="text-base md:text-lg lg:text-xl font-bold leading-tight">
-          Formulir Permohonan Pengambilan Produk Putusan
+          Formulir Permohonan Pengambilan Akta Cerai
         </h1>
         <p className="text-xs md:text-sm mt-1 opacity-90">Pengadilan Agama Kalianda</p>
       </div>
@@ -658,7 +658,7 @@ export default function FormulirPengambilan() {
 
                 {/* Foto KTP (Opsional) */}
                 <div>
-                  <label className="block mb-2 font-medium text-sm md:text-base text-gray-700">Foto KTP (Opsional)</label>
+                  <label className="block mb-2 font-medium text-sm md:text-base text-gray-700">Foto KTP</label>
                   <div className="flex flex-col gap-3">
                     {formData.fotoKtp ? (
                       <div className="relative">
